@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="stem" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6fb4ff"/><stop offset=".45" stop-color="#2a7fe8"/><stop offset="1" stop-color="#0b47b8"/>
+    </linearGradient>
+    <linearGradient id="up" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#2f9a2a"/><stop offset=".5" stop-color="#5cc244"/><stop offset="1" stop-color="#a6e47a"/>
+    </linearGradient>
+    <linearGradient id="low" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffb066"/><stop offset=".5" stop-color="#f06a1f"/><stop offset="1" stop-color="#c2410c"/>
+    </linearGradient>
+    <radialGradient id="core" cx=".38" cy=".32" r=".75">
+      <stop offset="0" stop-color="#fff6c4"/><stop offset=".35" stop-color="#ffd23f"/><stop offset="1" stop-color="#e09a00"/>
+    </radialGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2.2"/><feOffset dx="1.5" dy="2.5"/>
+      <feComponentTransfer><feFuncA type="linear" slope=".45"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#sh)">
+    <!-- upper arm -->
+    <path d="M41 49 L74 12 Q77 9 81 9 L90 9 Q95 10 92 15 L56 57 Z" fill="url(#up)" stroke="#1d6b17" stroke-width="1.6" stroke-linejoin="round"/>
+    <!-- lower arm -->
+    <path d="M44 55 L58 47 L93 85 Q96 90 90 91 L80 91 Q76 91 73 88 Z" fill="url(#low)" stroke="#9a3208" stroke-width="1.6" stroke-linejoin="round"/>
+    <!-- stem -->
+    <rect x="9" y="9" width="25" height="82" rx="6" fill="url(#stem)" stroke="#08348a" stroke-width="1.6"/>
+    <rect x="12" y="11.5" width="11" height="77" rx="4" fill="url(#gloss)" opacity=".55"/>
+    <!-- core -->
+    <circle cx="43" cy="52" r="12.5" fill="url(#core)" stroke="#a86d00" stroke-width="1.6"/>
+    <ellipse cx="40" cy="46.5" rx="7.5" ry="4.6" fill="url(#gloss)"/>
+    <path d="M72 14 Q76 11 82 11 L88 11" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
