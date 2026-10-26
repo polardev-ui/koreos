@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KoreOS - Under Construction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body, button, input, select, textarea {
+            font-family: Tahoma, 'Segoe UI', Geneva, Verdana, sans-serif;
+            font-size: 11px;
+            user-select: none;
+        }
+
+        body {
+            background-color: #3a6ea5;
+            background-image: url('background.png'), linear-gradient(135deg, #1b7218 0%, #3a97ff 60%, #0053b1 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .xp-window {
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5), inset 1px 1px 0px rgba(255, 255, 255, 0.6);
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #002d96;
+            background-color: #ece9d8;
+        }
+
+        .xp-titlebar {
+            background: linear-gradient(to bottom, #0058ee 0%, #3593ff 4%, #288eff 6%, #127dff 8%, #036ffc 10%, #0262ec 14%, #0058e0 20%, #0058e0 80%, #0042bd 90%, #0030a6 100%);
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            text-shadow: 1px 1px 1px #000;
+        }
+
+        .xp-btn {
+            width: 21px;
+            height: 21px;
+            border-radius: 3px;
+            border: 1px solid #fff;
+            box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.8), 1px 1px 2px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .xp-btn-min { background: linear-gradient(to bottom, #2b82ea, #034bb2); }
+        .xp-btn-max { background: linear-gradient(to bottom, #2b82ea, #034bb2); }
+        .xp-btn-close { background: linear-gradient(to bottom, #e76c53 0%, #c23315 100%); }
+        .xp-btn-close:hover { background: linear-gradient(to bottom, #f3866f 0%, #d83d1e 100%); }
+
+        .xp-button {
+            background: linear-gradient(to bottom, #fff 0%, #ece9d8 86%, #d8d2bd 100%);
+            border: 1px solid #003c74;
+            border-radius: 3px;
+            padding: 4px 14px;
+            color: #000;
+            box-shadow: inset -1px -1px 1px #a0a0a0, inset 1px 1px 1px #fff;
+            cursor: pointer;
+        }
+        .xp-button:hover {
+            box-shadow: inset -1px -1px 1px #e2a229, inset 1px 1px 1px #fff;
+            border-color: #e59700;
+        }
+        .xp-button:active {
+            background: linear-gradient(to bottom, #ded8c0 0%, #ece9d8 100%);
+            box-shadow: inset 1px 1px 2px #707070;
+        }
+
+        .xp-progress-container {
+            border: 1px solid #7f9db9;
+            background: #fff;
+            height: 18px;
+            padding: 2px;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .xp-progress-block {
+            width: 9px;
+            height: 100%;
+            background: linear-gradient(to bottom, #7ce678 0%, #30bf2c 50%, #159b11 51%, #45db41 100%);
+            border-radius: 1px;
+            display: inline-block;
+            margin-right: 2px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+        }
+
+        .xp-taskbar {
+            background: linear-gradient(to bottom, 
+                #1f8236 0px, #225ad2 1px, #2762e3 2px, #2b68ee 3px, 
+                #2c69f0 4px, #235ce1 10px, #1941a5 25px, #123386 100%);
+            height: 30px;
+            border-top: 1px solid #3882ea;
+        }
+
+        .xp-start-btn {
+            background: linear-gradient(to bottom, 
+                #64bd59 0%, #52b146 10%, #3ca02e 30%, #2e8b20 50%, 
+                #237717 70%, #1d6912 90%, #185a0e 100%);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 1px 0 4px rgba(0,0,0,0.4), inset 1px 1px 1px rgba(255,255,255,0.6);
+            border: 1px solid #14490a;
+            cursor: pointer;
+        }
+        .xp-start-btn:hover {
+            background: linear-gradient(to bottom, 
+                #77cb6d 0%, #63bf56 10%, #4cb03e 30%, #3b9a2d 50%, 
+                #2f8623 70%, #26771a 90%, #206715 100%);
+        }
+
+        .xp-task-item {
+            background: linear-gradient(to bottom, #3c8bf6 0%, #276ace 12%, #194fad 85%, #194fad 100%);
+            border: 1px solid #0f3273;
+            border-radius: 2px;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3);
+            color: white;
+            cursor: pointer;
+        }
+        .xp-task-item.active {
+            background: linear-gradient(to bottom, #173d83 0%, #18428c 12%, #1a499b 85%, #1d52ae 100%);
+            box-shadow: inset -1px -1px 1px rgba(255,255,255,0.2), inset 1px 1px 2px rgba(0,0,0,0.6);
+        }
+
+        .xp-systray {
+            background: linear-gradient(to bottom, #0c8fea 0%, #0972c5 10%, #095bc3 90%, #064089 100%);
+            border-left: 1px solid #09407d;
+            box-shadow: inset 1px 0 2px rgba(0,0,0,0.3);
+        }
+      
+        .xp-start-menu {
+            background-color: #4282d6;
+            border: 2px solid #002d96;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            box-shadow: 3px 3px 12px rgba(0,0,0,0.5);
+        }
+
+        .xp-menu-left {
+            background: #fff;
+            border-right: 1px solid #b5b5b5;
+        }
+
+        .desktop-icon {
+            border: 1px solid transparent;
+            border-radius: 3px;
+        }
+        .desktop-icon:hover {
+            background-color: rgba(11, 97, 230, 0.25);
+            border: 1px solid rgba(11, 97, 230, 0.5);
+        }
+
+        .xp-link {
+            color: #0000ff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .xp-link:hover {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body class="relative h-screen w-screen overflow-hidden">
+
+    <div class="absolute top-4 left-4 flex flex-col gap-6 z-0">
+        <div class="desktop-icon flex flex-col items-center w-20 p-2 cursor-pointer text-center text-white text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" onclick="openWindow()">
+            <svg class="w-9 h-9 mb-1" viewBox="0 0 48 48" fill="none">
+                <rect x="6" y="8" width="36" height="26" rx="2" fill="#3B82F6" stroke="#1D4ED8" stroke-width="2"/>
+                <rect x="10" y="12" width="28" height="18" fill="#93C5FD"/>
+                <path d="M16 38H32M24 34V38" stroke="#64748B" stroke-width="3" stroke-linecap="round"/>
+                <rect x="12" y="38" width="24" height="4" rx="1" fill="#94A3B8"/>
+            </svg>
+            <span>My Computer</span>
+        </div>
+
+        <div class="desktop-icon flex flex-col items-center w-20 p-2 cursor-pointer text-center text-white text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+            <svg class="w-9 h-9 mb-1" viewBox="0 0 48 48" fill="none">
+                <path d="M6 14C6 11.7909 7.79086 10 10 10H18L22 14H38C40.2091 14 42 15.7909 42 18V38C42 40.2091 40.2091 42 38 42H10C7.79086 42 6 40.2091 6 38V14Z" fill="#F59E0B" stroke="#D97706" stroke-width="2"/>
+                <path d="M12 20H36V36H12V20Z" fill="#FCD34D"/>
+            </svg>
+            <span>My Documents</span>
+        </div>
+
+        <div class="desktop-icon flex flex-col items-center w-20 p-2 cursor-pointer text-center text-white text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" onclick="openWindow()">
+            <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center border-2 border-white mb-1 shadow-md">
+                <span class="text-white font-black text-lg italic">K</span>
+            </div>
+            <span>Kore Browser</span>
+        </div>
+
+        <div class="desktop-icon flex flex-col items-center w-20 p-2 cursor-pointer text-center text-white text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+            <svg class="w-9 h-9 mb-1" viewBox="0 0 48 48" fill="none">
+                <rect x="8" y="6" width="32" height="36" rx="2" fill="#E2E8F0" stroke="#64748B" stroke-width="2"/>
+                <circle cx="24" cy="24" r="10" fill="#2563EB"/>
+                <path d="M24 18V30M18 24H30" stroke="white" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <span>Install KoreOS</span>
+        </div>
+    </div>
+
+    <div id="constructionWindow" class="xp-window absolute w-[92vw] max-w-[560px] z-20 transition-opacity duration-150">
+        
+        <div id="windowHeader" class="xp-titlebar px-2 py-1 flex items-center justify-between cursor-move select-none">
+            <div class="flex items-center gap-1.5 overflow-hidden">
+                <div class="w-4 h-4 rounded-sm bg-amber-500 flex items-center justify-center font-bold text-[9px] text-white">K</div>
+                <span class="text-white font-bold text-xs tracking-wide truncate">KoreOS Site Status - Under Construction</span>
+            </div>
+            
+            <div class="flex items-center gap-1">
+                <button class="xp-btn xp-btn-min" onclick="minimizeWindow()">_</button>
+                <button class="xp-btn xp-btn-max" title="Maximize">□</button>
+                <button class="xp-btn xp-btn-close" onclick="closeWindow()">✕</button>
+            </div>
+        </div>
+
+        <div class="bg-[#ece9d8] border-b border-[#aca899] px-2 py-1 flex gap-4 text-xs text-gray-800">
+            <span class="hover:bg-[#316ac5] hover:text-white px-1 cursor-pointer">File</span>
+            <span class="hover:bg-[#316ac5] hover:text-white px-1 cursor-pointer">Edit</span>
+            <span class="hover:bg-[#316ac5] hover:text-white px-1 cursor-pointer">View</span>
+            <span class="hover:bg-[#316ac5] hover:text-white px-1 cursor-pointer">Favorites</span>
+            <span class="hover:bg-[#316ac5] hover:text-white px-1 cursor-pointer">Tools</span>
+            <span class="hover:bg-[#316ac5] hover:text-white px-1 cursor-pointer">Help</span>
+        </div>
+
+        <div class="p-4 sm:p-6 bg-[#ece9d8]">
+            <div class="flex items-center justify-between border-b-2 border-[#0058ee] pb-3 mb-4">
+                <div class="flex items-center gap-3">
+                    <img src="logo.png" alt="KoreOS Logo" class="h-10 w-auto object-contain" onerror="this.onerror=null; this.src='https://placehold.co/120x40/0058ee/ffffff?text=KoreOS';" />
+                    <div>
+                        <h1 class="text-xl font-bold text-[#002d96] flex items-center gap-1 leading-none">
+                            KoreOS <span class="text-xs bg-orange-500 text-white px-1.5 py-0.5 rounded font-normal uppercase tracking-wider">v1.0</span>
+                        </h1>
+                        <p class="text-xs text-gray-600">Next-Generation Familiar Desktop Experience</p>
+                    </div>
+                </div>
+                <div class="hidden sm:block text-right">
+                    <span class="text-[10px] text-gray-500 block">Status Code: 200_DEV</span>
+                    <span class="text-[10px] text-green-700 font-bold block">● Active Build</span>
+                </div>
+            </div>
+
+            <div class="flex gap-4 items-start mb-5">
+                <div class="shrink-0 pt-1">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 border-2 border-amber-500 flex items-center justify-center text-amber-600 shadow-sm">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="flex-1">
+                    <h2 class="text-base font-bold text-gray-900 mb-1">Website & Web Services Under Construction</h2>
+                    <p class="text-xs text-gray-700 mb-3 leading-relaxed">
+                        The official website and online repository for <strong>KoreOS</strong> are currently being prepared. We are crafting a seamless experience matching your favorite classic operating system.
+                    </p>
+                    <div class="mb-2">
+                        <div class="flex justify-between text-[10px] text-gray-600 mb-1 font-semibold">
+                            <span>System Deployment Progress:</span>
+                            <span id="progressText">68%</span>
+                        </div>
+                        <div class="xp-progress-container flex items-center">
+                            <div id="progressBar" class="flex h-full w-full overflow-hidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-[#7f9db9] p-3 rounded mb-5 text-xs">
+                <div class="font-bold text-gray-800 border-b pb-1 mb-2">System Components in Preparation:</div>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700">
+                    <li class="flex items-center gap-1.5">
+                        <span class="text-green-600 font-bold">✓</span> KoreOS Boot Manager
+                    </li>
+                    <li class="flex items-center gap-1.5">
+                        <span class="text-green-600 font-bold">✓</span> Kore Browser 1.0
+                    </li>
+                    <li class="flex items-center gap-1.5">
+                        <span class="text-amber-500 font-bold">↻</span> Network Connections Suite
+                    </li>
+                    <li class="flex items-center gap-1.5">
+                        <span class="text-amber-500 font-bold">↻</span> Desktop Environment Setup
+                    </li>
+                </ul>
+            </div>
+
+            <div class="text-xs text-gray-600 mb-5 flex flex-wrap justify-between items-center bg-[#f5f2e3] p-2 border border-[#d0ccc0] rx-2">
+                <span>Looking for early access?</span>
+                <div class="flex gap-3">
+                    <a href="#" class="xp-link" onclick="alert('KoreOS Release Candidate will be available soon!')">View Roadmap</a>
+                    <a href="#" class="xp-link" onclick="alert('Network setup tool is operational.')">Network Status</a>
+                </div>
+            </div>
+          
+            <div class="flex justify-end gap-2 border-t border-[#d0ccc0] pt-3">
+                <button class="xp-button font-bold min-w-[80px]" onclick="alert('KoreOS installer is currently under construction.') font-bold">OK</button>
+                <button class="xp-button min-w-[80px]" onclick="closeWindow()">Cancel</button>
+            </div>
+        </div>
+
+        <div class="bg-[#ece9d8] border-t border-[#aca899] px-2 py-0.5 text-[10px] text-gray-600 flex justify-between items-center">
+            <span class="flex items-center gap-1">
+                <span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+                Ready
+            </span>
+            <span>KoreOS © 2026 Josh Clark</span>
+        </div>
+    </div>
+
+    <div id="startMenu" class="hidden xp-start-menu absolute bottom-[30px] left-0 w-80 z-40 text-xs overflow-hidden">
+        <div class="bg-gradient-to-r from-[#0058ee] to-[#388e3c] p-2 flex items-center gap-3 text-white font-bold border-b border-[#002d96]">
+            <div class="w-8 h-8 rounded bg-white/20 border border-white/40 flex items-center justify-center text-lg">K</div>
+            <span class="text-sm">User (KoreOS)</span>
+        </div>
+
+        <div class="flex h-64">
+            <div class="xp-menu-left w-1/2 p-2 flex flex-col gap-2">
+                <div class="flex items-center gap-2 p-1.5 hover:bg-[#316ac5] hover:text-white rounded cursor-pointer" onclick="openWindow()">
+                    <span class="font-bold">Kore Browser</span>
+                </div>
+                <div class="flex items-center gap-2 p-1.5 hover:bg-[#316ac5] hover:text-white rounded cursor-pointer">
+                    <span>E-mail</span>
+                </div>
+                <hr class="my-1 border-gray-300">
+                <div class="flex items-center gap-2 p-1 hover:bg-[#316ac5] hover:text-white rounded cursor-pointer">
+                    <span>All Programs ►</span>
+                </div>
+            </div>
+
+            <div class="w-1/2 bg-[#d3e5fa] p-2 border-l border-[#b5b5b5] flex flex-col gap-2 text-gray-800">
+                <div class="font-bold hover:underline cursor-pointer">My Documents</div>
+                <div class="font-bold hover:underline cursor-pointer">My Computer</div>
+                <div class="hover:underline cursor-pointer">Control Panel</div>
+                <div class="hover:underline cursor-pointer">Network Connections</div>
+                <hr class="my-1 border-blue-200">
+                <div class="hover:underline cursor-pointer">Help and Support</div>
+                <div class="hover:underline cursor-pointer">Run...</div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-[#4282d6] to-[#2b68ee] p-2 flex justify-end gap-3 border-t border-[#002d96] text-white">
+            <button class="flex items-center gap-1 hover:underline" onclick="alert('Logging off KoreOS...')">
+                <span>Log Off</span>
+            </button>
+            <button class="flex items-center gap-1 hover:underline text-amber-200" onclick="alert('Shutting down KoreOS...')">
+                <span>Turn Off Computer</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="xp-taskbar fixed bottom-0 left-0 right-0 w-full z-50 flex items-center justify-between px-0 select-none">
+        
+        <div class="flex items-center gap-1 h-full">
+            <button onclick="toggleStartMenu()" class="xp-start-btn h-full px-3 flex items-center gap-1.5 text-white font-bold italic text-sm shadow-md">
+                <div class="w-4 h-4 bg-white/20 rounded-full flex items-center justify-center not-italic font-black text-xs text-amber-300">K</div>
+                <span>start</span>
+            </button>
+
+            <div class="h-5 w-[2px] bg-white/30 mx-1"></div>
+
+            <div id="taskbarItem" onclick="toggleWindowFromTaskbar()" class="xp-task-item active h-[22px] px-2 flex items-center gap-1.5 max-w-[200px] text-xs">
+                <div class="w-3.5 h-3.5 rounded-sm bg-amber-500 flex items-center justify-center text-[8px] font-bold">K</div>
+                <span class="truncate">KoreOS Site Status...</span>
+            </div>
+
+            <div class="xp-task-item h-[22px] px-2 hidden sm:flex items-center gap-1.5 max-w-[160px] text-xs opacity-80">
+                <svg class="w-3.5 h-3.5 text-blue-200" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                </svg>
+                <span class="truncate">Network Connections</span>
+            </div>
+        </div>
+
+        <div class="xp-systray h-full px-3 flex items-center gap-2 text-white text-xs">
+            <svg class="w-3.5 h-3.5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m2.828-9.9a9 9 0 0112.728 0"/>
+            </svg>
+            <svg class="w-3.5 h-3.5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+            
+            <span id="xpClock" class="font-normal text-white drop-shadow">11:54 AM</span>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // '0' should be '12'
+            document.getElementById('xpClock').textContent = `${hours}:${minutes} ${ampm}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function renderProgressBar() {
+            const container = document.getElementById('progressBar');
+            container.innerHTML = '';
+            const totalBlocks = 22;
+            for (let i = 0; i < totalBlocks; i++) {
+                const block = document.createElement('div');
+                block.className = 'xp-progress-block';
+                container.appendChild(block);
+            }
+        }
+        renderProgressBar();
+
+        let blockOffset = 0;
+        setInterval(() => {
+            const blocks = document.querySelectorAll('.xp-progress-block');
+            blocks.forEach((blk, idx) => {
+                if ((idx + blockOffset) % 4 === 0) {
+                    blk.style.opacity = '1';
+                } else {
+                    blk.style.opacity = '0.35';
+                }
+            });
+            blockOffset = (blockOffset + 1) % 4;
+        }, 180);
+
+        function toggleStartMenu() {
+            const menu = document.getElementById('startMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('startMenu');
+            const startBtn = e.target.closest('.xp-start-btn');
+            if (!startBtn && !menu.contains(e.target) && !menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        const windowElem = document.getElementById('constructionWindow');
+        const taskbarItem = document.getElementById('taskbarItem');
+
+        function closeWindow() {
+            windowElem.classList.add('hidden');
+            taskbarItem.classList.remove('active');
+            taskbarItem.style.opacity = '0.5';
+        }
+
+        function minimizeWindow() {
+            windowElem.classList.add('hidden');
+            taskbarItem.classList.remove('active');
+        }
+
+        function openWindow() {
+            windowElem.classList.remove('hidden');
+            taskbarItem.classList.add('active');
+            taskbarItem.style.opacity = '1';
+        }
+
+        function toggleWindowFromTaskbar() {
+            if (windowElem.classList.contains('hidden')) {
+                openWindow();
+            } else {
+                minimizeWindow();
+            }
+        }
+
+        dragElement(document.getElementById("constructionWindow"));
+
+        function dragElement(elmnt) {
+            let offsetX = 0, offsetY = 0;
+            const header = document.getElementById("windowHeader");
+
+            function centerWindow() {
+                const initialLeft = Math.max(10, (window.innerWidth - elmnt.offsetWidth) / 2);
+                const initialTop = Math.max(10, (window.innerHeight - elmnt.offsetHeight) / 3);
+                elmnt.style.left = initialLeft + "px";
+                elmnt.style.top = initialTop + "px";
+            }
+
+            centerWindow();
+
+            if (header) {
+                header.addEventListener("mousedown", dragStart);
+                header.addEventListener("touchstart", dragStart, { passive: false });
+            }
+
+            function getClientCoords(e) {
+                if (e.touches && e.touches.length > 0) {
+                    return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+                }
+                return { clientX: e.clientX, clientY: e.clientY };
+            }
+
+            function dragStart(e) {
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+
+                const coords = getClientCoords(e);
+                const rect = elmnt.getBoundingClientRect();
+
+                offsetX = coords.clientX - rect.left;
+                offsetY = coords.clientY - rect.top;
+
+                elmnt.style.left = rect.left + "px";
+                elmnt.style.top = rect.top + "px";
+                elmnt.style.transform = "none";
+                elmnt.style.margin = "0";
+
+                document.addEventListener("mousemove", dragMove);
+                document.addEventListener("mouseup", dragEnd);
+                document.addEventListener("touchmove", dragMove, { passive: false });
+                document.addEventListener("touchend", dragEnd);
+            }
+
+            function dragMove(e) {
+                e.preventDefault();
+                const coords = getClientCoords(e);
+
+                let newLeft = coords.clientX - offsetX;
+                let newTop = coords.clientY - offsetY;
+
+                const maxLeft = window.innerWidth - elmnt.offsetWidth;
+                const maxTop = window.innerHeight - 30;
+
+                newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                newTop = Math.max(0, Math.min(newTop, maxTop));
+
+                elmnt.style.left = newLeft + "px";
+                elmnt.style.top = newTop + "px";
+            }
+
+            function dragEnd() {
+                document.removeEventListener("mousemove", dragMove);
+                document.removeEventListener("mouseup", dragEnd);
+                document.removeEventListener("touchmove", dragMove);
+                document.removeEventListener("touchend", dragEnd);
+            }
+        }
+    </script>
+</body>
+</html>
