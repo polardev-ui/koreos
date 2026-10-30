@@ -53,7 +53,7 @@ function applyRelease(release) {
  if (!Array.isArray(release.assets) || typeof release.tag_name !== 'string') throw new Error('Unexpected release data');
  $('#release-name').textContent = release.name || `KoreOS ${release.tag_name}`;
  $('#release-link').href = safeGithubUrl(release.html_url) || releasePage;
- for (const arch of ['arm64','amd64']) {
+ for (const arch of ['arm64','amd64','intel']) {
   const asset = release.assets.find(file => new RegExp(`(?:^|[-_.])${arch}\\.iso$`, 'i').test(file.name));
   const link = $(`[data-arch="${arch}"]`);
   const detail = $(`[data-checksum="${arch}"]`);
@@ -65,7 +65,8 @@ function applyRelease(release) {
   }
   link.href = download;link.removeAttribute('aria-disabled');
   const size = Number.isFinite(asset.size) ? `${(asset.size / 1048576).toFixed(0)} MB · ` : '';
-  $(`[data-meta="${arch}"]`).textContent = `${size}${arch.toUpperCase()} · ${arch === 'arm64' ? 'UEFI' : 'BIOS + UEFI'}`;
+  const metaArch = arch === 'intel' ? 'INTEL' : arch.toUpperCase();
+  $(`[data-meta="${arch}"]`).textContent = `${size}${metaArch} · ${arch === 'arm64' ? 'UEFI' : 'BIOS + UEFI'}`;
   const digest = /^sha256:[a-f\d]{64}$/i.test(asset.digest || '') ? asset.digest.slice(7) : null;
   detail.hidden = !digest;
   if(digest) {detail.querySelector('code').textContent = digest;detail.querySelector('button').dataset.hash = digest;}
